@@ -63,4 +63,21 @@ export const getShort = async (req, res) => {
         res.sendStatus(500);
         console.log(e);
     }
-}
+};
+
+export const openShort = async (req, res) => {
+    let short = req.params.shortUrl;
+    try{
+        let verify = await connection.query('SELECT * FROM urls WHERE "shortUrl" = $1', [short]);
+        if(verify.rows.length !== 0){
+            let views = verify.rows[0].visitCount + 1;
+            await connection.query('UPDATE urls SET "visitCount" = $1 WHERE "shortUrl" = $2', [views, short]);
+            res.redirect(verify.rows[0].url);
+        } else {
+            res.sendStatus(404);
+        }
+    } catch(e){
+        res.sendStatus(500);
+        console.log(e);
+    }
+};
