@@ -44,3 +44,23 @@ export const deleteShort = async (req, res) => {
         console.log(e);
     }
 };
+
+export const getShort = async (req, res) => {
+    let id = req.params.id;
+    try{
+        let shorten = await connection.query("SELECT * FROM urls WHERE id = $1", [id]);
+        if(shorten.rows.length !== 0){
+            let body = {
+                id: shorten.rows[0].id,
+                shortUrl: shorten.rows[0].shortUrl,
+                url: shorten.rows[0].url
+            };
+            res.status(200).send(body);
+        } else {
+            res.sendStatus(404);
+        }
+    } catch(e){
+        res.sendStatus(500);
+        console.log(e);
+    }
+}
