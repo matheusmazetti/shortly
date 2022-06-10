@@ -32,3 +32,20 @@ export const user = async (req, res) => {
         console.log(e);
     }
 };
+
+export const ranking = async (req, res) => {
+    try{
+        let obj = await connection.query(`
+        SELECT users.id, users.name, count(urls.id) AS "linksCount", SUM(urls."visitCount") AS "visitCount"
+        FROM users
+        LEFT JOIN urls
+        ON users.id = urls."userId"
+        GROUP BY users.id
+        ORDER BY "visitCount" 
+        `);
+        res.status(200).send(obj.rows);
+    } catch(e){
+        res.sendStatus(500);
+        console.log(e);
+    }
+};

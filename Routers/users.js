@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { user } from '../Controllers/users.js';
+import { ranking, user } from '../Controllers/users.js';
 
 const usersRouter = Router();
 
 usersRouter.get('/users/:id', user);
-//usersRouter.get('/ranking');
+usersRouter.get('/ranking', ranking);
 
 export default usersRouter;
