@@ -6,7 +6,7 @@ export const user = async (req, res) => {
     const token = authorization?.replace('Bearer ', '');
     try{
         let verify = await connection.query('SELECT * FROM sessions WHERE token = $1', [token]);
-        if(verify.rows.length !== 0 && verify.rows[0].userId === id){
+        if(verify.rows.length !== 0 && verify.rows[0].userId == id){
             let firstPart = await connection.query(`
                 SELECT users.id, users.name, SUM(urls."visitCount") AS visitCount
                 FROM users
@@ -20,15 +20,13 @@ export const user = async (req, res) => {
             let obj = {
                 id: id,
                 name: firstPart.rows[0].name,
-                visitCount: firstPart.rows[0].visitCount,
+                visitCount: firstPart.rows[0].visitcount,
                 shortenedUrls: secondPart.rows  
             }
             res.status(200).send(obj);
         } else {
             res.sendStatus(401);
         }
-        
-
     } catch(e){
         res.sendStatus(500);
         console.log(e);
